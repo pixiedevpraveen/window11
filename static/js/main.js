@@ -1,10 +1,10 @@
-const window = PetiteVue.reactive({
+const os = PetiteVue.reactive({
     count: 0,
 
     taskbar: {
         show: true, apps: [{ name: "terminal", running: false }], activeAppId: 0,
         toggle() {
-            // window.activity.focus(0);
+            // os.activity.focus(0);
             // document.querySelector(":root").setAttribute("--taskbar-size", 0)
             document.documentElement.style.setProperty("--taskbar-size", this.show ? '0em' : '2.5em');
 
@@ -18,10 +18,10 @@ const window = PetiteVue.reactive({
     },
     layout: {
         menu: {
-            mainMenu: { id: 1, toggle() { window.activity.focusedId = (window.activity.focusedId == this.id ? 0 : this.id); } },
+            mainMenu: { id: 1, toggle() { os.activity.focusedId = (os.activity.focusedId == this.id ? 0 : this.id); } },
             systemTray: {
                 id: 2,
-                toggle() { window.activity.focusedId = (window.activity.focusedId == this.id ? 0 : this.id); },
+                toggle() { os.activity.focusedId = (os.activity.focusedId == this.id ? 0 : this.id); },
                 items: [
                     { name: 'wifi', icon: "svg/wifi-solid.svg", active: true },
                     { name: 'bluetooth', icon: "svg/bluetooth-b.svg", active: true },
@@ -33,7 +33,7 @@ const window = PetiteVue.reactive({
             },
             calender: {
                 id: 3,
-                toggle() { window.activity.focusedId = (window.activity.focusedId == this.id ? 0 : this.id); }
+                toggle() { os.activity.focusedId = (os.activity.focusedId == this.id ? 0 : this.id); }
             },
             menuRight: 0 // 0=hide menu(#menu-right), 1=system-tray, 2=calender
         },
@@ -42,7 +42,7 @@ const window = PetiteVue.reactive({
     workspace: { show: true },
     desktop: {
         id: -1,
-        toggle() { window.activity.focusedId = this.id },
+        toggle() { os.activity.focusedId = this.id },
         items: [
             { name: 'wifi', icon: "svg/wifi-solid.svg", active: false },
             { name: 'bluetooth', icon: "svg/bluetooth-b.svg", active: false },
@@ -54,7 +54,7 @@ const window = PetiteVue.reactive({
     },
     apps: {
         id: 10,
-        toggle() { window.activity.focusedId = this.id },
+        toggle() { os.activity.focusedId = this.id },
         items: [
             { name: 'wifi', icon: "svg/wifi-solid.svg", active: false },
             { name: 'bluetooth', icon: "svg/bluetooth-b.svg", active: false },
@@ -122,7 +122,7 @@ const components = {
 store.getState();
 PetiteVue.
     createApp({
-        window,
+        os,
         $delimiters: ['{', '}'],
         store
     }).mount("#windows11");

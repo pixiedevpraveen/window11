@@ -21,24 +21,24 @@
     <body onload="init()">
         <!-- <div id="main-loading"></div> -->
         <div id="windows11">
-            <div id="desktop" @click="window.desktop.toggle" class="p-3" style="background: gray;">
-                <button @click="window.taskbar.toggle" class="btn primary">Hide focusedId:
-                    {window.activity.focusedId}</button>
+            <div id="desktop" @click="os.desktop.toggle" class="p-3" style="background: gray;">
+                <button @click="os.taskbar.toggle" class="btn primary">Hide focusedId:
+                    {os.activity.focusedId}</button>
                 <!-- <div class="directory-pr medium cyan"></div> -->
-                <div class="desktop-icon d-flex flex-col p-2" v-for="item in window.desktop.items">
+                <div class="desktop-icon d-flex flex-col p-2" v-for="item in os.desktop.items">
                     <img :src="'/static/'+item.icon" class="icn icn-5x" alt="">
                     <small v-html="item.name"></small>
                 </div>
             </div>
-            <main id="workspaces" v-if="window.workspace.show">
+            <main id="workspaces" v-if="os.workspace.show">
                 <div class="workspace">
                     <div class="application">
                         <h2 class="text-center">title</h2>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia beatae quidem voluptas
                             maiores
                             ducimus animi rem dignissimos earum rerum laboriosam.</p>
-                        <button @click="window.taskbar.toggle" class="btn primary">Hide focusedId:
-                            {window.activity.focusedId}</button>
+                        <button @click="os.taskbar.toggle" class="btn primary">Hide focusedId:
+                            {os.activity.focusedId}</button>
                     </div>
                     <div class="application">
                         <h2 class="text-center">title</h2>
@@ -49,12 +49,12 @@
 
                 </div>
             </main>
-            <div id="menu-right" :class="{active:window.activity.focusedId==2 || window.activity.focusedId==3}">
-                <section id="system-tray" v-if="window.activity.focusedId==2">
+            <div id="menu-right" :class="{active:os.activity.focusedId==2 || os.activity.focusedId==3}">
+                <section id="system-tray" v-if="os.activity.focusedId==2">
                     <div class="container">
-                        <div v-for="item in window.layout.menu.systemTray.items" class="system-tray__item"
+                        <div v-for="item in os.layout.menu.systemTray.items" class="system-tray__item"
                             :class="{active: item.active}"
-                            @click="{item.name != 'Airplane mode' ? item.active= !item.active : window.toggleAirplane()}">
+                            @click="{item.name != 'Airplane mode' ? item.active= !item.active : os.toggleAirplane()}">
                             <div>
                                 <img :src="'/static/'+item.icon" class="icn icn-lg" :alt="item.name">
                             </div>
@@ -67,18 +67,18 @@
                         <div class="d-flex">
                             <img src="/static/svg/volume-up-solid.svg" class="icn icn-lg" alt="volume">
                             <input type="range" class="sliders" name="volume-slider"
-                                v-model="window.media.sound.volume"><b v-html="window.media.sound.volume"> </b>
+                                v-model="os.media.sound.volume"><b v-html="os.media.sound.volume"> </b>
                             <!-- <b>&gt;</b> -->
                         </div>
                         <div class="d-flex">
                             <img src="/static/svg/sun-solid.svg" class="icn icn-lg" alt="brighness">
                             <input type="range" class="sliders" name="brightness-slider"
-                                v-model="window.layout.brighness" id="brightness-slider"><b
-                                v-html="window.layout.brighness"></b>
+                                v-model="os.layout.brighness" id="brightness-slider"><b
+                                v-html="os.layout.brighness"></b>
                         </div>
                     </div>
                 </section>
-                <section id="calender" v-if="window.activity.focusedId==3">
+                <section id="calender" v-if="os.activity.focusedId==3">
                     <span>1</span>
                     <span>2</span>
                     <span>3</span>
@@ -86,7 +86,7 @@
                 </section>
             </div>
             <div id="main-menu" class="p-3 d-flex flex-col center-pop"
-                :class="{'hide-y': window.activity.focusedId==1}">
+                :class="{'hide-y': os.activity.focusedId==1}">
                 <div id="runner" class="b-primary">
                     <label for="runner__search">🔍️</label>
                     <input type="text" class="fluid b-none" name="search" id="runner__search">
@@ -96,27 +96,27 @@
                     <button class="win-btn" @click="store.methods.incBy(12)">inc</button>
                 </div>
             </div>
-            <div id="taskbar" :class="{hide:!window.taskbar.show}">
+            <div id="taskbar" :class="{hide:!os.taskbar.show}">
                 <div id="taskbar__appbar" class="center-x">
-                    <img @click="window.layout.menu.mainMenu.toggle" src="/static/svg/windows.svg"
+                    <img @click="os.layout.menu.mainMenu.toggle" src="/static/svg/windows.svg"
                         class="win-btn icn-2x" alt="togglable menu">
                     <span>3</span><span>4</span><span>5</span><span>6</span>
                 </div>
                 <div id="taskbar__right">
                     <img src="/static/svg/angle-up-solid.svg" class="win-btn icn me-1" alt="togglable menu">
-                    <img v-if="window.layout.menu.systemTray.items[0].active" src="/static/svg/wifi-solid.svg"
+                    <img v-if="os.layout.menu.systemTray.items[0].active" src="/static/svg/wifi-solid.svg"
                         class="win-btn icn icn-lg me-1" alt="wifi">
-                    <img v-if="window.layout.menu.systemTray.items[1].active" src="/static/svg/bluetooth-b.svg"
+                    <img v-if="os.layout.menu.systemTray.items[1].active" src="/static/svg/bluetooth-b.svg"
                         class="win-btn icn icn-lg me-1" alt="bluetooth">
                     <img src="/static/svg/battery-half-solid.svg" class="win-btn icn icn-lg me-1" alt="battery">
-                    <b @click="window.layout.menu.calender.toggle" class="win-btn"><small class="datetime"></small></b>
-                    <b @click="window.layout.menu.systemTray.toggle"><i class="icn icn-ethernet win-btn"></i></b>
-                    <!-- <b @click="window.layout.menu.menuRight=0">hide tray</b> -->
+                    <b @click="os.layout.menu.calender.toggle" class="win-btn"><small class="datetime"></small></b>
+                    <b @click="os.layout.menu.systemTray.toggle"><i class="icn icn-ethernet win-btn"></i></b>
+                    <!-- <b @click="os.layout.menu.menuRight=0">hide tray</b> -->
                 </div>
-                <div id="taskbar__show-desktop" class="win-btn" @click="window.showWorkspace= !window.showWorkspace">
+                <div id="taskbar__show-desktop" class="win-btn" @click="os.showWorkspace= !os.showWorkspace">
                 </div>
             </div>
-            <div id="brightoverlay" :style="{opacity: 1-window.layout.brighness/100.0}"></div>
+            <div id="brightoverlay" :style="{opacity: 1-os.layout.brighness/100.0}"></div>
         </div>
         <script src="/static/js/helper.js"></script>
     </body>
