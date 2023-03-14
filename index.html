@@ -9,13 +9,13 @@
         <link rel="shortcut icon" href="/favicon.ico">
 
 
-        <link rel="stylesheet" href="/static/css/mini.css">
-        <link rel="stylesheet" href="/static/css/style.css">
-        <script src="/static/js/petite.js"></script>
-        <script src="/static/js/axios.min.js"></script>
-        <script src="/static/js/draggabilly.js"></script>
-        <script src="/static/js/dragula.js"></script>
-        <script type="module" src="/static/js/main.js"></script>
+        <link rel="stylesheet" href="static/css/mini.css">
+        <link rel="stylesheet" href="static/css/style.css">
+        <script src="static/js/petite.js"></script>
+        <script src="static/js/axios.min.js"></script>
+        <script src="static/js/draggabilly.js"></script>
+        <script src="static/js/dragula.js"></script>
+        <script type="module" src="static/js/main.js"></script>
 
     </head>
 
@@ -26,7 +26,7 @@
                 <div class="desktop-icon d-flex flex-col text-center p-2" v-for="item in os.desktop.getItems()"
                     @dblclick="os.desktop.handleAppDblClick(item)"
                     @contextmenu="os.desktop.openIconContextMenu($event, item)">
-                    <img :src="'/static/'+item.icon" :alt="item.name">
+                    <img :src="'static/'+item.icon" :alt="item.name">
                     <small>{{item.name}}</small>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                         :style="{'width': application.window.size.w, 'height': application.window.size.h, 'left': application.window.position.x, 'top': application.window.position.y}">
                         <div class="application__title-bar ps-1">
                             <div class="d-flex align-content-center">
-                                <img :src="'/static/'+application.icon" alt="" class="icn icn-small px-1">
+                                <img :src="'static/'+application.icon" alt="" class="icn icn-small px-1">
                                 <strong class="application__title-bar__title">{{ application.name }}</strong>
                             </div>
                             <div class="application__window-toggler">
@@ -73,7 +73,7 @@
                             :class="{'active': item.active}"
                             @click="{item.name != 'Airplane mode' ? item.active= !item.active : os.toggleAirplane()}">
                             <div>
-                                <img :src="'/static/'+item.icon" class="icn icn-lg" :alt="item.name">
+                                <img :src="'static/'+item.icon" class="icn icn-lg" :alt="item.name">
                             </div>
                             <div>
                                 <small v-html="item.name"></small>
@@ -82,13 +82,13 @@
                     </div>
                     <div class="container-fluid p-2">
                         <div class="d-flex">
-                            <img src="/static/svg/volume-up-solid.svg" class="icn icn-lg" alt="volume">
+                            <img src="static/svg/volume-up-solid.svg" class="icn icn-lg" alt="volume">
                             <input type="range" class="sliders" name="volume-slider" v-model="os.media.sound.volume"><b
                                 v-html="os.media.sound.volume"> </b>
                             <!-- <b>&gt;</b> -->
                         </div>
                         <div class="d-flex">
-                            <img src="/static/svg/sun-solid.svg" class="icn icn-lg" alt="brighness">
+                            <img src="static/svg/sun-solid.svg" class="icn icn-lg" alt="brighness">
                             <input type="range" class="sliders" name="brightness-slider" v-model="os.layout.brighness"
                                 id="brightness-slider"><b v-html="os.layout.brighness"></b>
                         </div>
@@ -112,7 +112,7 @@
                         <strong>Search Result: </strong>
                         <div class="apps d-flex flex-wrap">
                             <div class="app d-flex flex-col" v-for="app in os.runner.searchedApps()" :key="app.name">
-                                <img :src="'/static/' + app.icon" :alt="app.name">
+                                <img :src="'static/' + app.icon" :alt="app.name">
                                 <small class="text-center">{{app.name}}</small>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                         <strong>Pinned</strong>
                         <div class="apps d-flex flex-wrap">
                             <div class="app d-flex flex-col" v-for="app in os.runner.pinnedApps()" :key="app.name">
-                                <img :src="'/static/' + app.icon" :alt="app.name">
+                                <img :src="'static/' + app.icon" :alt="app.name">
                                 <small class="text-center">{{app.name}}</small>
                             </div>
                         </div>
@@ -130,23 +130,23 @@
             </div>
             <div id="taskbar" :class="{'hide':!os.taskbar.show}" class="user-select-none">
                 <div id="taskbar__appbar" class="center-x d-flex">
-                    <img @click="os.layout.menu.mainMenu.toggle" src="/static/svg/windows.svg"
+                    <img @click="os.layout.menu.mainMenu.toggle" src="static/svg/windows.svg"
                         class="win-btn icn-2x p-1" alt="togglable menu">
                     <div class="d-flex dragula-sort">
                         <div class="app p-1" v-for="(app, app_index) in os.taskbar.getPinnedApps()"
                             :class="{'active':os.workspaces.getActiveWorkspace().activeApp === app.name, 'running':(app.running && app.running.indexOf(os.workspaces.active) != -1)}"
                             :index="app.pinned" @click="os.taskbar.handleAppSingleClick(app)">
-                            <img :src="'/static/'+app.icon" class="win-btn icn-2x" alt="togglable menu">
+                            <img :src="'static/'+app.icon" class="win-btn icn-2x" alt="togglable menu">
                         </div>
                     </div>
                 </div>
                 <div id="taskbar__right">
-                    <img src="/static/svg/angle-up-solid.svg" class="win-btn icn me-1" alt="togglable menu">
-                    <img v-if="os.layout.menu.systemTray.items[0].active" src="/static/svg/wifi-solid.svg"
+                    <img src="static/svg/angle-up-solid.svg" class="win-btn icn me-1" alt="togglable menu">
+                    <img v-if="os.layout.menu.systemTray.items[0].active" src="static/svg/wifi-solid.svg"
                         class="win-btn icn icn-lg me-1" alt="wifi">
-                    <img v-if="os.layout.menu.systemTray.items[1].active" src="/static/svg/bluetooth-b.svg"
+                    <img v-if="os.layout.menu.systemTray.items[1].active" src="static/svg/bluetooth-b.svg"
                         class="win-btn icn icn-lg me-1" alt="bluetooth">
-                    <img src="/static/svg/battery-half-solid.svg" class="win-btn icn icn-lg me-1" alt="battery">
+                    <img src="static/svg/battery-half-solid.svg" class="win-btn icn icn-lg me-1" alt="battery">
                     <b @click="os.layout.menu.calender.toggle" class="win-btn"><small class="datetime"></small></b>
                     <b @click="os.layout.menu.systemTray.toggle"><i class="icn icn-ethernet win-btn"></i></b>
                     <!-- <b @click="os.layout.menu.menuRight=0">hide tray</b> -->
@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <script src="/static/js/helper.js"></script>
+        <script src="static/js/helper.js"></script>
     </body>
 
 </html>
