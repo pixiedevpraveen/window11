@@ -184,7 +184,7 @@ input.fluid {
 .application {
   position: absolute;
   width: 100%;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   background-color: #ffffff;
   box-shadow:
     -2px -2px 15px #00000020,
@@ -210,8 +210,8 @@ input.fluid {
 .application .application__title-bar {
   background-color: var(--theme-primary);
   display: flex;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
   justify-content: space-between;
   align-items: center;
   height: var(--app-titlebar-height);

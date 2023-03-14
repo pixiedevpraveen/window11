@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Windows 11 | patite-vue</title>
+        <title>Windows 11</title>
         <link rel="shortcut icon" href="favicon.ico">
 
 
@@ -130,8 +130,8 @@
             </div>
             <div id="taskbar" :class="{'hide':!os.taskbar.show}" class="user-select-none">
                 <div id="taskbar__appbar" class="center-x d-flex">
-                    <img @click="os.layout.menu.mainMenu.toggle" src="static/svg/windows.svg"
-                        class="win-btn icn-2x p-1" alt="togglable menu">
+                    <img @click="os.layout.menu.mainMenu.toggle" src="static/svg/windows.svg" class="win-btn icn-2x p-1"
+                        alt="togglable menu">
                     <div class="d-flex dragula-sort">
                         <div class="app p-1" v-for="(app, app_index) in os.taskbar.getPinnedApps()"
                             :class="{'active':os.workspaces.getActiveWorkspace().activeApp === app.name, 'running':(app.running && app.running.indexOf(os.workspaces.active) != -1)}"
@@ -163,8 +163,10 @@
             <div :class="{'hide': !os.desktop.appContextMenu.show}" id="comp__desktopIconContextMenu"
                 class="context-menu">
                 <div class="d-flex flex-col">
-                    <span @click="os.desktop.handleAppDblClick(os.desktop.appContextMenu.app); os.desktop.appContextMenu.show = false">Open</span>
-                    <span @click="os.desktop.appContextMenu.app.desktop = false; os.desktop.appContextMenu.show = false">Delete</span>
+                    <span
+                        @click="os.desktop.handleAppDblClick(os.desktop.appContextMenu.app); os.desktop.appContextMenu.show = false">Open</span>
+                    <span
+                        @click="os.desktop.appContextMenu.app.desktop = false; os.desktop.appContextMenu.show = false">Delete</span>
                 </div>
             </div>
         </div>
