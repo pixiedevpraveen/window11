@@ -13,47 +13,64 @@
         <link rel="stylesheet" href="/static/css/style.css">
         <script src="/static/js/petite.js"></script>
         <script src="/static/js/axios.min.js"></script>
-        <script type="module" src="/static/js/moveable.js"></script>
+        <script src="/static/js/draggabilly.js"></script>
+        <script src="/static/js/dragula.js"></script>
         <script type="module" src="/static/js/main.js"></script>
 
     </head>
 
     <body onload="init()">
-        <!-- <div id="main-loading"></div> -->
         <div id="windows11">
-            <div id="desktop" @click="os.desktop.toggle" class="p-3" style="background: gray;">
-                <button @click="os.taskbar.toggle" class="btn primary">Hide focusedId:
-                    {os.activity.focusedId}</button>
-                <!-- <div class="directory-pr medium cyan"></div> -->
-                <div class="desktop-icon d-flex flex-col p-2" v-for="item in os.desktop.items">
-                    <img :src="'/static/'+item.icon" class="icn icn-5x" alt="">
-                    <small v-html="item.name"></small>
+            <div id="desktop" @click="os.desktop.toggle" class="selectable p-3"
+                @contextmenu="os.desktop.openContextMenu($event)">
+                <div class="desktop-icon d-flex flex-col text-center p-2" v-for="item in os.desktop.getItems()"
+                    @dblclick="os.desktop.handleAppDblClick(item)"
+                    @contextmenu="os.desktop.openIconContextMenu($event, item)">
+                    <img :src="'/static/'+item.icon" :alt="item.name">
+                    <small>{{item.name}}</small>
                 </div>
             </div>
-            <main id="workspaces" v-if="os.workspace.show">
-                <div class="workspace">
-                    <div class="application">
-                        <h2 class="text-center">title</h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia beatae quidem voluptas
-                            maiores
-                            ducimus animi rem dignissimos earum rerum laboriosam.</p>
-                        <button @click="os.taskbar.toggle" class="btn primary">Hide focusedId:
-                            {os.activity.focusedId}</button>
-                    </div>
-                    <div class="application">
-                        <h2 class="text-center">title</h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia beatae quidem voluptas
-                            maiores
-                            ducimus animi rem dignissimos earum rerum laboriosam.</p>
+            <main id="workspaces" v-if="os.workspaces.show" class="pointer-events-none">
+                <div class="workspace pointer-events-none" v-for="workspace in os.workspaces.all">
+
+                    <div class="application" v-for="(application, app_index) in os.workspaces.getApps(workspace)"
+                        :class="{'hide': application.minimized, 'active': workspace.activeApp == application.name}"
+                        @click="os.workspaces.handleAppSingleClick(application, workspace)"
+                        @drag="os.workspaces.handleAppDrag(application, workspace)"
+                        :style="{'width': application.window.size.w, 'height': application.window.size.h, 'left': application.window.position.x, 'top': application.window.position.y}">
+                        <div class="application__title-bar ps-1">
+                            <div class="d-flex align-content-center">
+                                <img :src="'/static/'+application.icon" alt="" class="icn icn-small px-1">
+                                <strong class="application__title-bar__title">{{ application.name }}</strong>
+                            </div>
+                            <div class="application__window-toggler">
+                                <div class="application__window-toggler-btn application__window-toggler__minimize"
+                                    @click="os.workspaces.handleAppMinimize(application, workspace)"><span>--</span>
+                                </div>
+                                <div class="application__window-toggler-btn application__window-toggler__maximize"
+                                    @click="application.maximized = !application.maximized"><span></span></div>
+                                <!-- TODO: do here -->
+                                <div class="application__window-toggler-btn application__window-toggler__close"
+                                    @click="os.workspaces.handleAppClose(application, workspace)">X</div>
+                            </div>
+                        </div>
+                        <div class="application__window">
+                            <p>{{ application.data.content }} {{ workspace.activeApp }} {{ app_index }}</p>
+                            <strong>{{ os.workspaces.getActiveWorkspace().activeApp }}</strong>
+                            <strong>{{ application.name }}</strong>
+                        </div>
                     </div>
 
                 </div>
+
             </main>
-            <div id="menu-right" :class="{active:os.activity.focusedId==2 || os.activity.focusedId==3}">
+
+            <div id="menu-right" :class="{'active':os.activity.focusedId==2 || os.activity.focusedId==3}"
+                class="shadow user-select-none">
                 <section id="system-tray" v-if="os.activity.focusedId==2">
                     <div class="container">
                         <div v-for="item in os.layout.menu.systemTray.items" class="system-tray__item"
-                            :class="{active: item.active}"
+                            :class="{'active': item.active}"
                             @click="{item.name != 'Airplane mode' ? item.active= !item.active : os.toggleAirplane()}">
                             <div>
                                 <img :src="'/static/'+item.icon" class="icn icn-lg" :alt="item.name">
@@ -66,15 +83,14 @@
                     <div class="container-fluid p-2">
                         <div class="d-flex">
                             <img src="/static/svg/volume-up-solid.svg" class="icn icn-lg" alt="volume">
-                            <input type="range" class="sliders" name="volume-slider"
-                                v-model="os.media.sound.volume"><b v-html="os.media.sound.volume"> </b>
+                            <input type="range" class="sliders" name="volume-slider" v-model="os.media.sound.volume"><b
+                                v-html="os.media.sound.volume"> </b>
                             <!-- <b>&gt;</b> -->
                         </div>
                         <div class="d-flex">
                             <img src="/static/svg/sun-solid.svg" class="icn icn-lg" alt="brighness">
-                            <input type="range" class="sliders" name="brightness-slider"
-                                v-model="os.layout.brighness" id="brightness-slider"><b
-                                v-html="os.layout.brighness"></b>
+                            <input type="range" class="sliders" name="brightness-slider" v-model="os.layout.brighness"
+                                id="brightness-slider"><b v-html="os.layout.brighness"></b>
                         </div>
                     </div>
                 </section>
@@ -85,22 +101,44 @@
                     <span>4</span>
                 </section>
             </div>
-            <div id="main-menu" class="p-3 d-flex flex-col center-pop"
+            <div id="main-menu" class="d-flex flex-col user-select-none center-pop shadow p-3"
                 :class="{'hide-y': os.activity.focusedId==1}">
                 <div id="runner" class="b-primary">
                     <label for="runner__search">🔍️</label>
-                    <input type="text" class="fluid b-none" name="search" id="runner__search">
+                    <input type="text" class="fluid b-none" name="search" v-model="os.runner.value" id="runner__search">
                 </div>
-                <div class="container">
-                    {store.state.count}
-                    <button class="win-btn" @click="store.methods.incBy(12)">inc</button>
+                <div class="main-menu__container mt-3">
+                    <div class="main-menu__searched-apps" v-if="os.runner.value.length >= 1">
+                        <strong>Search Result: </strong>
+                        <div class="apps d-flex flex-wrap">
+                            <div class="app d-flex flex-col" v-for="app in os.runner.searchedApps()" :key="app.name">
+                                <img :src="'/static/' + app.icon" :alt="app.name">
+                                <small class="text-center">{{app.name}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-menu__pinned-apps" v-else>
+                        <strong>Pinned</strong>
+                        <div class="apps d-flex flex-wrap">
+                            <div class="app d-flex flex-col" v-for="app in os.runner.pinnedApps()" :key="app.name">
+                                <img :src="'/static/' + app.icon" :alt="app.name">
+                                <small class="text-center">{{app.name}}</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="taskbar" :class="{hide:!os.taskbar.show}">
-                <div id="taskbar__appbar" class="center-x">
+            <div id="taskbar" :class="{'hide':!os.taskbar.show}" class="user-select-none">
+                <div id="taskbar__appbar" class="center-x d-flex">
                     <img @click="os.layout.menu.mainMenu.toggle" src="/static/svg/windows.svg"
-                        class="win-btn icn-2x" alt="togglable menu">
-                    <span>3</span><span>4</span><span>5</span><span>6</span>
+                        class="win-btn icn-2x p-1" alt="togglable menu">
+                    <div class="d-flex dragula-sort">
+                        <div class="app p-1" v-for="(app, app_index) in os.taskbar.getPinnedApps()"
+                            :class="{'active':os.workspaces.getActiveWorkspace().activeApp === app.name, 'running':(app.running && app.running.indexOf(os.workspaces.active) != -1)}"
+                            :index="app.pinned" @click="os.taskbar.handleAppSingleClick(app)">
+                            <img :src="'/static/'+app.icon" class="win-btn icn-2x" alt="togglable menu">
+                        </div>
+                    </div>
                 </div>
                 <div id="taskbar__right">
                     <img src="/static/svg/angle-up-solid.svg" class="win-btn icn me-1" alt="togglable menu">
@@ -113,10 +151,22 @@
                     <b @click="os.layout.menu.systemTray.toggle"><i class="icn icn-ethernet win-btn"></i></b>
                     <!-- <b @click="os.layout.menu.menuRight=0">hide tray</b> -->
                 </div>
-                <div id="taskbar__show-desktop" class="win-btn" @click="os.showWorkspace= !os.showWorkspace">
+                <div id="taskbar__show-desktop" class="win-btn" @click="os.workspaces.show = !os.workspaces.show">
                 </div>
             </div>
-            <div id="brightoverlay" :style="{opacity: 1-os.layout.brighness/100.0}"></div>
+            <div id="brightoverlay" :style="{opacity: 1 - os.layout.brighness/100.0}"></div>
+            <div :class="{'hide': !os.desktop.contextMenu.show}" id="comp__desktopContextMenu" class="context-menu">
+                <div class="d-flex flex-col">
+                    <span>working on this...</span>
+                </div>
+            </div>
+            <div :class="{'hide': !os.desktop.appContextMenu.show}" id="comp__desktopIconContextMenu"
+                class="context-menu">
+                <div class="d-flex flex-col">
+                    <span @click="os.desktop.handleAppDblClick(os.desktop.appContextMenu.app); os.desktop.appContextMenu.show = false">Open</span>
+                    <span @click="os.desktop.appContextMenu.app.desktop = false; os.desktop.appContextMenu.show = false">Delete</span>
+                </div>
+            </div>
         </div>
         <script src="/static/js/helper.js"></script>
     </body>
