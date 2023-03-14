@@ -22,7 +22,7 @@
   --desktop-icon-size: 4rem;
   --directory-width: 7rem;
   --directory-height: 4rem;
-  --desktop-wallpaper-home: url("/static/img/windows11-2.jpg");
+  --desktop-wallpaper-home: url("../img/windows11-2.jpg");
   /* --text-light: #000;
   --text-dark: #fff; */
 }
